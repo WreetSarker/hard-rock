@@ -27,7 +27,7 @@ function displayData(data) {
         <h3 class="lyrics-name">${val.title}</h3>
         <p class="author lead">Album by <span>${val.artist.name}</span></p>
         <audio controls>
-        <source src="${val.preview}" type="audio/ogg">
+        <source src="${val.preview}" type="audio/mpeg">
         Preview.
         </audio>
         </div>
