@@ -1,23 +1,8 @@
 let searchesDiv = document.getElementById('searchResult');
 let lyricsDiv = document.getElementById('song-lyric');
 document.getElementById('searchBtn').addEventListener('click', function () {
-    let searchVal = document.getElementById('searchInput').value;
-    const url = `https://api.lyrics.ovh/suggest/${searchVal}`;
-    console.log(url);
-    fetch(url)
-        .then(resp => resp.json())
-        .then(data => {
-            console.log(data.data);
-            displayData(data.data);
-        });
-    searchVal = '';
-    document.getElementById('searchInput').value = searchVal;
-    searchesDiv.innerHTML = '';
-    lyricsDiv.innerText = '';
+    searchResult();
 });
-//data.data[0].album.title
-//data.data[0].artist.name
-//data.data[0].artist.link
 function displayData(data) {
     data.forEach(val => {
         const searchDiv = document.createElement('div');
@@ -38,9 +23,29 @@ function displayData(data) {
         `;
         searchDiv.innerHTML = searchInfo;
         searchesDiv.appendChild(searchDiv);
+        toggleSpinner(false);
     });
 }
-
+document.getElementById('searchInput').addEventListener('keypress', function (e) {
+    if (e.code === 'Enter') {
+        searchResult();
+    }
+});
+function searchResult() {
+    let searchVal = document.getElementById('searchInput').value;
+    const url = `https://api.lyrics.ovh/suggest/${searchVal}`;
+    toggleSpinner(true);
+    fetch(url)
+        .then(resp => resp.json())
+        .then(data => {
+            console.log(data.data);
+            displayData(data.data);
+        });
+    searchVal = '';
+    document.getElementById('searchInput').value = searchVal;
+    searchesDiv.innerHTML = '';
+    lyricsDiv.innerText = '';
+}
 function getLyric(artist, title) {
     const songUrl = `https://api.lyrics.ovh/v1/${artist}/${title}`
     fetch(songUrl)
@@ -49,4 +54,8 @@ function getLyric(artist, title) {
 }
 function displayLyrics(lyrics) {
     lyricsDiv.innerText = lyrics;
+}
+const toggleSpinner = (show) => {
+    const spinner = document.getElementById('loading-spinner');
+    show ? spinner.classList.remove('invisible') : spinner.classList.add('invisible');
 }
